@@ -26,7 +26,15 @@ export const createProduct = async (req: Request, res: Response) => {
   }
 };
 export const getProducts = async (req: Request, res: Response) => {
-  res.send("the get product routes");
+  try {
+    const products = await product.find({});
+    res.status(200).json({ success: true, data: products });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
 };
 export const deleteProduct = async (req: Request, res: Response) => {
   const { id } = req.params;
