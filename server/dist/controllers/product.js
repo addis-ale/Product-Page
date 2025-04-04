@@ -17,9 +17,9 @@ const product_validator_1 = require("../validators/product.validator");
 const product_model_1 = __importDefault(require("../model/product.model"));
 const zod_1 = require("zod");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const validatedData = product_validator_1.createProductSchema.safeParse(req.body);
-    const newProduct = new product_model_1.default(validatedData);
     try {
+        const validatedData = product_validator_1.createProductSchema.safeParse(req.body);
+        const newProduct = new product_model_1.default(validatedData);
         yield newProduct.save();
         res.status(201).json({ success: true, data: newProduct });
     }
@@ -47,5 +47,21 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     res.send("the get product routes");
 });
 exports.getProducts = getProducts;
-const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
+const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const deletedProduct = yield product_model_1.default.findByIdAndDelete(id);
+        if (!exports.deleteProduct) {
+            res.status(404).json({ success: false, message: "Product not found" });
+            return;
+        }
+        res.status(200).json({ success: true, message: "Product Deleted" });
+    }
+    catch (error) {
+        res.status(404).json({
+            success: false,
+            message: "Product not found",
+        });
+    }
+});
 exports.deleteProduct = deleteProduct;
