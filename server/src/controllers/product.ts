@@ -72,3 +72,15 @@ export const updateProduct = async (req: Request, res: Response) => {
     });
   }
 };
+export const getProductById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const singleProduct = await product.findById(id);
+    res.status(200).json({
+      success: true,
+      data: singleProduct,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "server error" });
+  }
+};

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateProduct = exports.deleteProduct = exports.getProducts = exports.createProduct = void 0;
+exports.getProductById = exports.updateProduct = exports.deleteProduct = exports.getProducts = exports.createProduct = void 0;
 const product_validator_1 = require("../validators/product.validator");
 const product_model_1 = __importDefault(require("../model/product.model"));
 const zod_1 = require("zod");
@@ -95,3 +95,17 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updateProduct = updateProduct;
+const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const singleProduct = yield product_model_1.default.findById(id);
+        res.status(200).json({
+            success: true,
+            data: singleProduct,
+        });
+    }
+    catch (error) {
+        res.status(500).json({ success: false, message: "server error" });
+    }
+});
+exports.getProductById = getProductById;
