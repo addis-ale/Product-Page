@@ -3,7 +3,7 @@ import { createProductSchema } from "../validators/product.validator";
 import product from "../model/product.model";
 import { ZodError } from "zod";
 export const createProduct = async (req: Request, res: Response) => {
-  const validatedData = createProductSchema.parse(req.body);
+  const validatedData = createProductSchema.safeParse(req.body);
   const newProduct = new product(validatedData);
   try {
     await newProduct.save();

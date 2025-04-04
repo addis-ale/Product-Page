@@ -17,7 +17,7 @@ const product_validator_1 = require("../validators/product.validator");
 const product_model_1 = __importDefault(require("../model/product.model"));
 const zod_1 = require("zod");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const validatedData = product_validator_1.createProductSchema.parse(req.body);
+    const validatedData = product_validator_1.createProductSchema.safeParse(req.body);
     const newProduct = new product_model_1.default(validatedData);
     try {
         yield newProduct.save();
