@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { createProductSchema } from "../validators/product.validator";
 import product from "../model/product.model";
-import { ZodError } from "zod";
+import { date, ZodError } from "zod";
+import mongoose from "mongoose";
 export const createProduct = async (req: Request, res: Response) => {
+  const validatedData = createProductSchema.parse(req.body);
+  const newProduct = new product(validatedData);
   try {
-    const validatedData = createProductSchema.safeParse(req.body);
-    const newProduct = new product(validatedData);
     await newProduct.save();
     res.status(201).json({ success: true, data: newProduct });
   } catch (error) {
@@ -49,6 +50,25 @@ export const deleteProduct = async (req: Request, res: Response) => {
     res.status(404).json({
       success: false,
       message: "Product not found",
+    });
+  }
+};
+export const updateProduct = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updateData = req.body;
+  try {
+    const updatedProduct = await product.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+    res.status(200).json({
+      success: true,
+      message: "Updated Successfully",
+      data: updatedProduct,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
     });
   }
 };

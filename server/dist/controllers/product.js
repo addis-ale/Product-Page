@@ -12,14 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.getProducts = exports.createProduct = void 0;
+exports.updateProduct = exports.deleteProduct = exports.getProducts = exports.createProduct = void 0;
 const product_validator_1 = require("../validators/product.validator");
 const product_model_1 = __importDefault(require("../model/product.model"));
 const zod_1 = require("zod");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const validatedData = product_validator_1.createProductSchema.parse(req.body);
+    const newProduct = new product_model_1.default(validatedData);
     try {
-        const validatedData = product_validator_1.createProductSchema.safeParse(req.body);
-        const newProduct = new product_model_1.default(validatedData);
         yield newProduct.save();
         res.status(201).json({ success: true, data: newProduct });
     }
@@ -74,3 +74,24 @@ const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.deleteProduct = deleteProduct;
+const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const updateData = req.body;
+    try {
+        const updatedProduct = yield product_model_1.default.findByIdAndUpdate(id, updateData, {
+            new: true,
+        });
+        res.status(200).json({
+            success: true,
+            message: "Updated Successfully",
+            data: updatedProduct,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Server Error",
+        });
+    }
+});
+exports.updateProduct = updateProduct;
