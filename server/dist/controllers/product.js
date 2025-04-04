@@ -44,7 +44,16 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.createProduct = createProduct;
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("the get product routes");
+    try {
+        const products = yield product_model_1.default.find({});
+        res.status(200).json({ success: true, data: products });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Server error",
+        });
+    }
 });
 exports.getProducts = getProducts;
 const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
