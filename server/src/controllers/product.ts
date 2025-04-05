@@ -68,7 +68,7 @@ export const updateProduct = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Internal Server Error",
     });
   }
 };
